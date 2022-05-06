@@ -1,75 +1,134 @@
-import './App.css'
-import { useForm } from 'react-hook-form'
+import './App.css';
+import { useForm } from 'react-hook-form';
+import * as React from 'react';
+import TextField from '@mui/material/TextField';
+import { Button, TextareaAutosize } from '@mui/material';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+
+// Validation
+const RegisterSchema = yup.object.shape({
+  name: yup.string().required(),
+  email: yup.string().email().required().pattern(),
+  mobilenumber: yup.number().integer().positive().max(10),
+  country: yup.string(),
+  state: yup.string(),
+  city: yup.string(),
+  Message: yup.string()
+});
 
 function App () {
   const onSubmit = (data) => {
-    console.log('Registered Successfully', data)
-  }
-  const { register, handleSubmit } = useForm()
+    // console.log('Registered Successfully', data);
+    window.alert(JSON.stringify(data));
+  };
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm({
+    resolver: yupResolver(RegisterSchema)
+  });
+  // const errors = formState.errors; 
 
   return (
     <div className='App'>
-      <form className='container'>
+      <form className="container">
         <label>
-          Name
-          <input
-            type='text'
+          Name:
+          <TextField
+            id="outlined-basic"
+            label="Enter your name"
+            variant="outlined"
+            type="text"
             {...register('name')}
-            placeholder='Enter your name'
             required
           />
         </label>
+        {errors.name && <p>{errors.name.message}</p>}
         <br />
         <label>
-          Email
-          <input
-            type='email'
+          Email:
+          <TextField
+            id="outlined-basic"
+            label="Enter your Email"
+            variant="outlined"
+            type="email"
             {...register('email')}
-            placeholder='Enter your Email'
             required
           />
         </label>
+        {errors.email && <p>{errors.email.message}</p>}
         <br />
         <label>
-          Mobile Number
-          <input
-            type='number'
+          Mobile Number:
+          <TextField
+            id="outlined-basic"
+            label="Enter mobile number"
+            variant="outlined"
+            type="number"
             {...register('mobilenumber')}
-            placeholder='Enter mobile number'
           />
         </label>
+        {errors.mobilenumber && <p>{errors.mobilenumber.message}</p>}
         <br />
         <label>
-          Country
-          <input type='text' placeholder='Enter Country' />
-        </label>
-        <br />
-        <label>
-          State
-          <input type='text' placeholder='Enter State' />
-        </label>
-        <br />
-        <label>
-          City
-          <input type='text' placeholder='Enter City' />
-        </label>
-        <br />
-        <label>
-          message
-          <textArea
-            type='text'
-            {...register('message')}
-            style={{ width: 200 }}
-            placeholder='Type Here'
+          Country:
+          <TextField
+            id="outlined-basic"
+            label="Enter Country"
+            variant="outlined"
+            type="text"
           />
         </label>
+        {errors.country && <p>{errors.mobilenumber.message}</p>}
         <br />
-        <button onSubmit={handleSubmit(onSubmit)} type='submit'>
+        <label>
+          State:
+          <TextField
+            id="outlined-basic"
+            label="Enter State"
+            variant="outlined"
+            type="text"
+          />
+        </label>
+        {errors.state && <p>{errors.mobilenumber.message}</p>}
+        <br />
+        <label>
+          City:
+          <TextField
+            id="outlined-basic"
+            label="Enter City"
+            variant="outlined"
+            type="text"
+          />
+        </label>
+        {errors.city && <p>{errors.mobilenumber.message}</p>}
+        <br />
+        <label>
+          Message:
+          <TextareaAutosize
+            type="text"
+            minRows={6}
+            {...register('Message')}
+            style={{ width: 350 }}
+            placeholder="Type Here"
+          />
+        </label>
+        {errors.Message && <p>{errors.Message.message}</p>}
+        <br />
+        <Button
+          onSubmit={handleSubmit(onSubmit)}
+          type="submit"
+          variant="contained"
+          color="success"
+        >
           Submit
-        </button>
+        </Button>
       </form>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
